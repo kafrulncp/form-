@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>জাতীয় নাগরিক পার্টি - সদস্য ফর্ম | কাফরুল থানা</title>
+
+<!-- SEO for GitHub Pages -->
+<meta name="description" content="জাতীয় নাগরিক পার্টি (এনসিপি) কাফরুল থানা - প্রাথমিক সদস্যপদ আবেদন ফর্ম">
+<meta name="author" content="NCP Kafroul Thana">
+<meta property="og:title" content="এনসিপি কাফরুল - সদস্য নিবন্ধন">
+<meta property="og:description" content="জাতীয় নাগরিক পার্টি কাফরুল থানা সদস্যপদ আবেদন">
+<meta property="og:type" content="website">
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700;800&family=Noto+Serif+Bengali:wght@400;700&display=swap" rel="stylesheet">
+
+<!-- Google Sheets backend - no external SDK needed -->
+
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --green-dark: #0d5c2e;
+    --green-mid:  #1a7a3e;
+    --green-light:#2a9a52;
+    --green-pale: #e8f5ed;
+    --green-ultra:#f0faf4;
+    --red-dark:   #9b1c1c;
+    --red-mid:    #c0392b;
+    --red-pale:   #fdf0f0;
+    --gold:       #d4a017;
+    --gold-light: #f0d060;
+    --white:      #ffffff;
+    --text-dark:  #1a2e1f;
+    --text-mid:   #2d4a35;
+    --text-muted: #5a7a62;
+    --border:     #b8d4be;
+    --shadow:     0 4px 24px rgba(13,92,46,.13);
+    --shadow-lg:  0 8px 40px rgba(13,92,46,.18);
+  }
+
+  body {
+    font-family: 'Noto Sans Bengali', sans-serif;
+    background: linear-gradient(135deg,#0d5c2e 0%,#1a7a3e 40%,#2a9a52 70%,#9b1c1c 100%);
+    min-height: 100vh;
+    padding: 24px 16px 48px;
+    overflow-x: hidden;
+  }
+
+  .page-wrapper { max-width: 860px; margin: 0 auto; }
+
+  /* ── HEADER ── */
+  .header {
+    background: var(--white);
+    border-radius: 20px 20px 0 0;
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+  }
+
+  .header-top {
+    background: var(--green-dark);
+    padding: 28px 32px 20px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    position: relative;
+  }
+
+  .header-top::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--gold));
+  }
+
+  .logo-ring {
+    flex-shrink: 0;
+    width: 100px; height: 100px;
+    border-radius: 50%;
+    border: 4px solid var(--gold);
+    box-shadow: 0 0 0 3px rgba(212,160,23,.3), 0 4px 20px rgba(0,0,0,.4);
+    overflow: hidden;
+    background: #fff;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .logo-ring img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  .symbol-ring {
+    flex-shrink: 0;
+    width: 90px; height: 90px;
+    border-radius: 50%;
+    border: 3px solid var(--gold);
+    box-shadow: 0 0 0 3px rgba(212,160,23,.3), 0 4px 20px rgba(0,0,0,.4);
+    overflow: hidden;
+    background: #fff;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .symbol-ring img { width: 82px; height: 82px; object-fit: contain; display: block; }
+
+  .header-text { flex: 1; text-align: center; }
+
+  .party-name-bn {
+    font-family: 'Noto Serif Bengali', serif;
+    font-size: 26px; font-weight: 700;
+    color: var(--white);
+    line-height: 1.3;
+  }
+
+  .party-sub { font-size: 20px; color: var(--gold-light); margin-top: 4px; letter-spacing: 1px; }
+
+  .header-red-band {
+    background: var(--red-dark);
+    padding: 10px 32px;
+    display: flex; align-items: center; justify-content: center;
+    gap: 16px; flex-wrap: wrap;
+  }
+
+  .band-text {
+    font-family: 'Noto Serif Bengali', serif;
+    font-size: 17px; font-weight: 700;
+    color: var(--white); letter-spacing: 2px;
+  }
+
+  /* ── FORM BODY ── */
+  .form-body {
+    background: var(--white);
+    padding: 28px 32px 36px;
+    border-radius: 0 0 20px 20px;
+    box-shadow: var(--shadow-lg);
+  }
+
+  /* ── SECTIONS ── */
+  .section { margin-bottom: 28px; }
+
+  .section-title {
+    font-size: 14px; font-weight: 700;
+    color: var(--white);
+    background: var(--green-mid);
+    padding: 8px 16px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  .section-title .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--gold-light);
+    flex-shrink: 0;
+  }
+
+  /* ── GRID ── */
+  .grid-1 { display: grid; grid-template-columns: 1fr; gap: 16px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+
+  @media (max-width: 600px) {
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    .header-top { flex-direction: column; text-align: center; padding: 20px; }
+    .form-body { padding: 20px 16px; }
+    .party-name-bn { font-size: 20px; }
+    .party-sub { font-size: 16px; }
+  }
+
+  /* ── FIELDS ── */
+  .field { display: flex; flex-direction: column; gap: 5px; }
+
+  .field label { font-size: 13px; font-weight: 600; color: var(--text-mid); }
+  .field label .req { color: var(--red-mid); margin-left: 2px; }
+
+  .field input,
+  .field select,
+  .field textarea {
+    font-family: 'Noto Sans Bengali', sans-serif;
+    font-size: 14px; color: var(--text-dark);
+    background: var(--green-ultra);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 13px;
+    outline: none;
+    transition: border-color .2s, box-shadow .2s, background .2s;
+    width: 100%;
+  }
+
+  .field input:focus,
+  .field select:focus,
+  .field textarea:focus {
+    border-color: var(--green-mid);
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(26,122,62,.12);
+  }
+
+  .field textarea { resize: vertical; min-height: 80px; }
+
+  .field select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%231a7a3e' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 36px;
+  }
+
+  .field input[readonly] { background: var(--green-pale); color: var(--green-dark); font-weight: 600; }
+
+  /* ── PHOTO ── */
+  .photo-section { display: flex; gap: 24px; align-items: flex-start; }
+
+  .photo-box {
+    flex-shrink: 0;
+    width: 110px; height: 130px;
+    border: 2px dashed var(--green-mid);
+    border-radius: 10px;
+    background: var(--green-ultra);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: background .2s;
+    position: relative; overflow: hidden;
+  }
+
+  .photo-box:hover { background: var(--green-pale); }
+  .photo-box svg { color: var(--green-mid); }
+
+  .photo-box span {
+    font-size: 11px; color: var(--text-muted);
+    margin-top: 6px; text-align: center;
+    padding: 0 4px; line-height: 1.4;
+  }
+
+  .photo-box input[type=file] {
+    position: absolute; inset: 0;
+    opacity: 0; cursor: pointer;
+    border: none; background: none; padding: 0;
+  }
+
+  #photo-preview {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: none;
+    position: absolute; inset: 0;
+    border-radius: 8px;
+  }
+
+  .photo-right { flex: 1; }
+
+  /* ── RADIO / CHECKBOX ── */
+  .radio-group, .check-group { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 2px; }
+
+  .radio-item, .check-item {
+    display: flex; align-items: center;
+    gap: 6px; cursor: pointer;
+    font-size: 14px; color: var(--text-dark);
+  }
+
+  .radio-item input, .check-item input {
+    width: 16px; height: 16px;
+    accent-color: var(--green-mid);
+    cursor: pointer; flex-shrink: 0;
+    border: none; background: none;
+    padding: 0; box-shadow: none;
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+    margin: 8px 0 20px;
+  }
+
+  /* ── DECLARATION ── */
+  .declaration {
+    background: var(--green-pale);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+    font-size: 13px; color: var(--text-mid);
+    line-height: 1.9; margin-bottom: 20px;
+  }
+
+  .declaration strong { color: var(--green-dark); }
+
+  /* ── SUBMIT ── */
+  .submit-area {
+    text-align: center;
+    margin-top: 28px; padding-top: 20px;
+    border-top: 2px solid var(--green-pale);
+  }
+
+  .btn-submit {
+    font-family: 'Noto Sans Bengali', sans-serif;
+    font-size: 16px; font-weight: 700;
+    color: var(--white);
+    background: linear-gradient(135deg, var(--green-dark), var(--green-mid));
+    border: none; border-radius: 50px;
+    padding: 14px 48px;
+    cursor: pointer;
+    transition: transform .15s, box-shadow .15s, opacity .2s;
+    box-shadow: 0 4px 16px rgba(13,92,46,.3);
+    letter-spacing: 1px;
+    position: relative;
+  }
+
+  .btn-submit:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(13,92,46,.4);
+  }
+
+  .btn-submit:active:not(:disabled) { transform: translateY(0); }
+  .btn-submit:disabled { opacity: 0.7; cursor: not-allowed; }
+
+  .btn-submit .spinner {
+    display: none;
+    width: 16px; height: 16px;
+    border: 2px solid rgba(255,255,255,0.4);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    vertical-align: middle;
+    margin-right: 8px;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .print-btn {
+    font-family: 'Noto Sans Bengali', sans-serif;
+    font-size: 14px;
+    color: var(--green-mid);
+    background: transparent;
+    border: 1.5px solid var(--green-mid);
+    border-radius: 50px;
+    padding: 10px 28px;
+    cursor: pointer;
+    margin-top: 12px;
+    transition: background .2s, color .2s;
+  }
+
+  .print-btn:hover { background: var(--green-pale); }
+
+  /* ── TOAST NOTIFICATION ── */
+  #toast {
+    position: fixed;
+    bottom: 30px; left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: #1a2e1f;
+    color: #fff;
+    padding: 14px 28px;
+    border-radius: 50px;
+    font-size: 14px; font-weight: 600;
+    box-shadow: 0 8px 30px rgba(0,0,0,.3);
+    z-index: 9999;
+    transition: transform 0.4s cubic-bezier(.34,1.56,.64,1);
+    display: flex; align-items: center; gap: 10px;
+    max-width: 90vw; text-align: center;
+  }
+
+  #toast.show { transform: translateX(-50%) translateY(0); }
+  #toast.success { background: var(--green-dark); }
+  #toast.error { background: var(--red-dark); }
+
+  /* ── FORM FOOTER ── */
+  .form-footer {
+    text-align: center;
+    color: rgba(255,255,255,.7);
+    font-size: 13px;
+    margin-top: 20px;
+    padding: 0 12px;
+    line-height: 1.6;
+  }
+
+  /* ── PRINT ── */
+  @media print {
+    body { background: white; padding: 0; }
+    .submit-area { display: none; }
+    .page-wrapper { max-width: 100%; }
+    .header { border-radius: 0; }
+    .form-body { border-radius: 0; box-shadow: none; }
+    .form-footer { color: #333; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-wrapper">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-top">
+      <div class="logo-ring">
+        <img src="data:image/jpeg;base64,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" alt="জাতীয় নাগরিক পার্টি কাফরুল লোগো">
+      </div>
+      <div class="header-text">
+        <div class="party-name-bn">জাতীয় নাগরিক পার্টি (এনসিপি)</div>
+        <div class="party-sub">কাফরুল থানা</div>
+      </div>
+      <div class="symbol-ring">
+        <img src="data:image/jpeg;base64,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" alt="শাপলা কলি">
+      </div>
+    </div>
+
+    <div class="header-red-band">
+      <span class="band-text">প্রাথমিক সদস্যপদ আবেদন ফর্ম</span>
+      <span class="band-text" style="font-size:13px;font-weight:500;letter-spacing:1px;">সকল তারকা (*) চিহ্নিত তথ্য পূরণ করা আবশ্যক</span>
+    </div>
+  </div>
+
+  <!-- FORM -->
+  <div class="form-body">
+    <form id="ncpForm" onsubmit="handleSubmit(event)" novalidate>
+
+      <!-- PERSONAL INFO -->
+      <div class="section">
+        <div class="section-title"><span class="dot"></span>ব্যক্তিগত তথ্য</div>
+
+        <div class="photo-section">
+          <div class="photo-box" title="ছবি আপলোড করুন">
+            <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+              <rect x="3" y="3" width="18" height="18" rx="3"/>
+              <circle cx="12" cy="10" r="3"/>
+              <path d="M6 21c0-3.314 2.686-6 6-6s6 2.686 6 6"/>
+            </svg>
+            <span>পাসপোর্ট সাইজ ছবি</span>
+            <input type="file" accept="image/*" onchange="previewPhoto(this)" id="photoInput">
+            <img id="photo-preview" alt="preview">
+          </div>
+
+          <div class="photo-right">
+            <div class="grid-1" style="gap:14px">
+              <div class="field">
+                <label>পূর্ণ নাম (বাংলায়) <span class="req">*</span></label>
+                <input type="text" id="nameBn" name="nameBn" placeholder="আপনার পূর্ণ নাম লিখুন" required>
+              </div>
+              <div class="field">
+                <label>পূর্ণ নাম (ইংরেজিতে) <span class="req">*</span></label>
+                <input type="text" id="nameEn" name="nameEn" placeholder="Full name in English" required>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="grid-3" style="margin-bottom:14px">
+        <div class="field">
+          <label>পিতার নাম <span class="req">*</span></label>
+          <input type="text" id="fatherName" name="fatherName" placeholder="পিতার নাম" required>
+        </div>
+        <div class="field">
+          <label>মাতার নাম <span class="req">*</span></label>
+          <input type="text" id="motherName" name="motherName" placeholder="মাতার নাম" required>
+        </div>
+        <div class="field">
+          <label>স্বামী/স্ত্রীর নাম</label>
+          <input type="text" id="spouseName" name="spouseName" placeholder="প্রযোজ্য হলে লিখুন">
+        </div>
+      </div>
+
+      <div class="grid-3">
+        <div class="field">
+          <label>জন্ম তারিখ <span class="req">*</span></label>
+          <input type="date" id="dob" name="dob" required>
+        </div>
+        <div class="field">
+          <label>জাতীয় পরিচয়পত্র নং <span class="req">*</span></label>
+          <input type="text" id="nid" name="nid" placeholder="NID নম্বর" required>
+        </div>
+        <div class="field">
+          <label>লিঙ্গ <span class="req">*</span></label>
+          <select id="gender" name="gender" required>
+            <option value="">নির্বাচন করুন</option>
+            <option>পুরুষ</option>
+            <option>মহিলা</option>
+            <option>তৃতীয় লিঙ্গ</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- CONTACT -->
+      <div class="section" style="margin-top:24px">
+        <div class="section-title"><span class="dot"></span>যোগাযোগের তথ্য</div>
+
+        <div class="grid-2" style="margin-bottom:14px">
+          <div class="field">
+            <label>মোবাইল নম্বর <span class="req">*</span></label>
+            <input type="tel" id="mobile" name="mobile" placeholder="০১XXXXXXXXX" required>
+          </div>
+          <div class="field">
+            <label>বিকল্প মোবাইল নম্বর</label>
+            <input type="tel" id="altMobile" name="altMobile" placeholder="০১XXXXXXXXX">
+          </div>
+        </div>
+
+        <div class="grid-3">
+          <div class="field">
+            <label>ইমেইল ঠিকানা</label>
+            <input type="email" id="email" name="email" placeholder="example@email.com">
+          </div>
+          <div class="field">
+            <label>ফেসবুক প্রোফাইল লিঙ্ক</label>
+            <input type="url" id="facebook" name="facebook" placeholder="https://facebook.com/yourusername">
+          </div>
+          <div class="field">
+            <label>পেশা <span class="req">*</span></label>
+            <input type="text" id="profession" name="profession" placeholder="আপনার পেশা লিখুন" required>
+          </div>
+        </div>
+      </div>
+
+      <!-- ADDRESS -->
+      <div class="section">
+        <div class="section-title"><span class="dot"></span>ঠিকানা</div>
+
+        <div class="grid-2" style="margin-bottom:14px">
+          <div class="field">
+            <label>বর্তমান ঠিকানা <span class="req">*</span></label>
+            <textarea id="currentAddress" name="currentAddress" placeholder="বাড়ি নং, রোড, এলাকা, ঢাকা" required></textarea>
+          </div>
+          <div class="field">
+            <label>স্থায়ী ঠিকানা <span class="req">*</span></label>
+            <textarea id="permanentAddress" name="permanentAddress" placeholder="গ্রাম, পোস্ট অফিস, উপজেলা, জেলা" required></textarea>
+          </div>
+        </div>
+
+        <div class="grid-3">
+          <div class="field">
+            <label>ওয়ার্ড নং <span class="req">*</span></label>
+            <select id="ward" name="ward" required>
+              <option value="">ওয়ার্ড নির্বাচন করুন</option>
+              <option>ওয়ার্ড ০৪</option>
+              <option>ওয়ার্ড ১৪</option>
+              <option>ওয়ার্ড ১৬</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>থানা <span class="req">*</span></label>
+            <input type="text" value="কাফরুল" readonly>
+          </div>
+          <div class="field">
+            <label>জেলা <span class="req">*</span></label>
+            <input type="text" value="ঢাকা" readonly>
+          </div>
+        </div>
+      </div>
+
+      <!-- EDUCATION -->
+      <div class="section">
+        <div class="section-title"><span class="dot"></span>শিক্ষাগত যোগ্যতা ও অন্যান্য</div>
+
+        <div class="grid-3" style="margin-bottom:14px">
+          <div class="field">
+            <label>শিক্ষাগত যোগ্যতা <span class="req">*</span></label>
+            <select id="education" name="education" required>
+              <option value="">নির্বাচন করুন</option>
+              <option>প্রাথমিক</option>
+              <option>মাধ্যমিক (SSC)</option>
+              <option>উচ্চমাধ্যমিক (HSC)</option>
+              <option>স্নাতক</option>
+              <option>স্নাতকোত্তর</option>
+              <option>ডক্টরেট</option>
+              <option>অন্যান্য</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>ধর্ম</label>
+            <select id="religion" name="religion">
+              <option value="">নির্বাচন করুন</option>
+              <option>ইসলাম</option>
+              <option>হিন্দু</option>
+              <option>বৌদ্ধ</option>
+              <option>খ্রিস্টান</option>
+              <option>অন্যান্য</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>রক্তের গ্রুপ</label>
+            <select id="bloodGroup" name="bloodGroup">
+              <option value="">নির্বাচন করুন</option>
+              <option>A+</option><option>A-</option>
+              <option>B+</option><option>B-</option>
+              <option>AB+</option><option>AB-</option>
+              <option>O+</option><option>O-</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field" style="margin-bottom:14px">
+          <label>আগে কোনো রাজনৈতিক দলের সদস্য ছিলেন কি?</label>
+          <div class="radio-group">
+            <label class="radio-item"><input type="radio" name="prevParty" value="না" id="prevPartyNo"> না</label>
+            <label class="radio-item"><input type="radio" name="prevParty" value="হ্যাঁ" id="prevPartyYes"> হ্যাঁ</label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>যদি হ্যাঁ হয়, দলের নাম ও পদবী</label>
+          <input type="text" id="prevPartyDetails" name="prevPartyDetails" placeholder="দলের নাম এবং আপনার পদবী উল্লেখ করুন">
+        </div>
+      </div>
+
+      <!-- CONTRIBUTION -->
+      <div class="section">
+        <div class="section-title"><span class="dot"></span>কিভাবে এনসিপিতে অবদান রাখতে চান</div>
+        <div class="field">
+          <label>এনসিপিতে আপনার অবদান রাখার পরিকল্পনা <span class="req">*</span></label>
+          <textarea id="skills" name="skills" placeholder="আপনি কিভাবে জাতীয় নাগরিক পার্টিতে অবদান রাখতে চান তা বিস্তারিত লিখুন..." style="min-height:120px" required></textarea>
+        </div>
+      </div>
+
+      <!-- DECLARATION -->
+      <div class="section">
+        <div class="section-title"><span class="dot"></span>অঙ্গীকারনামা ও ঘোষণা</div>
+        <div class="declaration">
+          আমি ঘোষণা করছি যে, উপরে প্রদত্ত সকল তথ্য সত্য ও সঠিক। আমি <strong>জাতীয় নাগরিক পার্টি (এনসিপি)</strong>-এর গঠনতন্ত্র, নীতি ও আদর্শ মেনে চলতে সম্মত এবং দলের নিয়মকানুন পরিপালন করে দলের উন্নয়ন ও অগ্রগতিতে সক্রিয়ভাবে অবদান রাখতে প্রতিশ্রুতিবদ্ধ। আমি বাংলাদেশের সংবিধান ও আইনের প্রতি শ্রদ্ধাশীল এবং সকল অগণতান্ত্রিক কার্যকলাপ থেকে বিরত থাকব।
+        </div>
+
+        <div class="field">
+          <label>স্বাক্ষর হিসেবে পূর্ণ নাম <span class="req">*</span></label>
+          <input type="text" id="signature" name="signature" placeholder="পূর্ণ নাম লিখুন" required>
+        </div>
+      </div>
+
+      <!-- SUBMIT -->
+      <div class="submit-area">
+        <button type="submit" class="btn-submit" id="submitBtn">
+          <span class="spinner" id="spinner"></span>
+          <span id="submitText">✦ ফর্ম জমা দিন ✦</span>
+        </button>
+
+        <br>
+        <button type="button" class="print-btn" onclick="window.print()">🖨️ প্রিন্ট করুন</button>
+
+
+      </div>
+
+    </form>
+  </div>
+
+  <div class="form-footer">
+    জাতীয় নাগরিক পার্টি · কাফরুল থানা, ঢাকা · সদস্য নিবন্ধন বিভাগ
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast">
+  <span id="toastIcon">✅</span>
+  <span id="toastMsg">সফলভাবে জমা হয়েছে!</span>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     SCRIPTS
+═══════════════════════════════════════════════ -->
+<script>
+
+/* ══════════════════════════════════════════════
+   ① GOOGLE SHEETS CONFIGURATION
+   
+   SETUP STEPS:
+   1. Google Sheet তৈরি করুন এবং নিচের কলাম নাম দিন:
+      Timestamp | নাম (বাংলা) | নাম (English) | পিতার নাম | মাতার নাম | স্বামী/স্ত্রী | জন্ম তারিখ | NID | লিঙ্গ | মোবাইল | বিকল্প মোবাইল | ইমেইল | ফেসবুক | পেশা | বর্তমান ঠিকানা | স্থায়ী ঠিকানা | ওয়ার্ড | থানা | জেলা | শিক্ষা | ধর্ম | রক্তের গ্রুপ | পূর্ববর্তী দল | দলের বিস্তারিত | দক্ষতা | স্বাক্ষর
+   2. Extensions → Apps Script → নতুন script তৈরি করুন
+   3. GOOGLE_APPS_SCRIPT কোড paste করুন এবং Deploy করুন
+   4. Web App URL নিচে paste করুন:
+══════════════════════════════════════════════ */
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyE_fB5ceDSV7oJvR7oktE0wg8cXmRgqpRLkmq3O9yQy7cXiKqmZP5ZgMKPn-ncLQyxKQ/exec'; // ← আপনার Web App URL এখানে বসান
+
+
+/* ──────────────────────────────────────────────
+   ② PHOTO PREVIEW
+────────────────────────────────────────────── */
+function previewPhoto(input) {
+  const preview = document.getElementById('photo-preview');
+  if (input.files && input.files[0]) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      preview.src = e.target.result;
+      preview.style.display = 'block';
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+
+
+/* ──────────────────────────────────────────────
+   ③ COLLECT FORM DATA
+────────────────────────────────────────────── */
+function collectFormData() {
+  const skills = document.getElementById('skills')?.value || '';
+
+  const prevParty = document.querySelector('input[name="prevParty"]:checked');
+
+  return {
+    submission_time   : new Date().toLocaleString('bn-BD', { timeZone: 'Asia/Dhaka' }),
+    name_bn           : document.getElementById('nameBn')?.value || '',
+    name_en           : document.getElementById('nameEn')?.value || '',
+    father_name       : document.getElementById('fatherName')?.value || '',
+    mother_name       : document.getElementById('motherName')?.value || '',
+    spouse_name       : document.getElementById('spouseName')?.value || '',
+    dob               : document.getElementById('dob')?.value || '',
+    nid               : document.getElementById('nid')?.value || '',
+    gender            : document.getElementById('gender')?.value || '',
+    mobile            : document.getElementById('mobile')?.value || '',
+    alt_mobile        : document.getElementById('altMobile')?.value || '',
+    email             : document.getElementById('email')?.value || '',
+    facebook          : document.getElementById('facebook')?.value || '',
+    profession        : document.getElementById('profession')?.value || '',
+    current_address   : document.getElementById('currentAddress')?.value || '',
+    permanent_address : document.getElementById('permanentAddress')?.value || '',
+    ward              : document.getElementById('ward')?.value || '',
+    thana             : 'কাফরুল',
+    district          : 'ঢাকা',
+    education         : document.getElementById('education')?.value || '',
+    religion          : document.getElementById('religion')?.value || '',
+    blood_group       : document.getElementById('bloodGroup')?.value || '',
+    prev_party        : prevParty ? prevParty.value : '',
+    prev_party_details: document.getElementById('prevPartyDetails')?.value || '',
+    skills            : skills,
+    signature         : document.getElementById('signature')?.value || '',
+  };
+}
+
+
+/* ──────────────────────────────────────────────
+   ④ FORM SUBMIT → Google Sheets
+────────────────────────────────────────────── */
+async function handleSubmit(e) {
+  e.preventDefault();
+
+  const form = document.getElementById('ncpForm');
+  if (!form.checkValidity()) {
+    form.reportValidity();
+    return;
+  }
+
+  const btn     = document.getElementById('submitBtn');
+  const spinner = document.getElementById('spinner');
+  const txt     = document.getElementById('submitText');
+
+  btn.disabled    = true;
+  spinner.style.display = 'inline-block';
+  txt.textContent = 'পাঠানো হচ্ছে…';
+
+  const data = collectFormData();
+
+  try {
+    /* Google Sheets configured? */
+    if (GOOGLE_SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL') {
+      /* Demo mode */
+      await new Promise(r => setTimeout(r, 1200));
+      showToast('success', '✅ ফর্ম জমা হয়েছে! (Demo: Google Apps Script URL সেটআপ করুন)');
+      form.reset();
+      document.getElementById('photo-preview').style.display = 'none';
+    } else {
+      const formData = new FormData();
+      Object.entries(data).forEach(([k, v]) => formData.append(k, v));
+      const resp = await fetch(GOOGLE_SCRIPT_URL, { method: 'POST', body: formData });
+      const result = await resp.json();
+      if (result.result === 'success') {
+        showToast('success', '✅ ফর্ম সফলভাবে Google Sheet-এ জমা হয়েছে!');
+        form.reset();
+        document.getElementById('photo-preview').style.display = 'none';
+      } else {
+        throw new Error(result.error || 'Unknown error');
+      }
+    }
+  } catch (err) {
+    console.error('Google Sheets Error:', err);
+    showToast('error', '❌ পাঠাতে সমস্যা হয়েছে। আবার চেষ্টা করুন।');
+  } finally {
+    btn.disabled = false;
+    spinner.style.display = 'none';
+    txt.textContent = '✦ ফর্ম জমা দিন ✦';
+    btn.style.background = '';
+  }
+}
+
+
+/* ──────────────────────────────────────────────
+   ⑥ TOAST NOTIFICATION
+────────────────────────────────────────────── */
+function showToast(type, msg) {
+  const toast = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  toast.className = 'show ' + type;
+  setTimeout(() => { toast.className = ''; }, 4500);
+}
+
+</script>
+
+</body>
+</html>
